@@ -1,0 +1,68 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RTI Display Manager</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="top-bar">
+        <div class="brand">
+          <div class="logo">RTI</div>
+          <div class="title" id="appTitle">RTI Display Manager</div>
+        </div>
+        <div class="top-actions">
+          <button id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+          <button id="toggleConfigBtn" title="Settings" aria-label="Settings">⚙</button>
+        </div>
+      </header>
+
+      <main class="main-layout">
+        <section class="display-area" id="displayArea"></section>
+
+        <aside class="config-panel hidden" id="configPanel">
+          <h2>Layout Settings</h2>
+          <div class="config-group">
+            <label>App Name</label>
+            <input type="text" id="inputAppTitle" />
+          </div>
+
+          <div class="config-group">
+            <label>Number of Sources (1–10)</label>
+            <select id="sourceCountSelect">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+
+          <div class="config-group">
+            <label>Grid (columns per row)</label>
+            <select id="gridColumnsSelect">
+              <option value="1">1 column</option>
+              <option value="2">2 columns</option>
+              <option value="3">3 columns</option>
+              <option value="4">4 columns</option>
+              <option value="5">5 columns</option>
+            </select>
+          </div>
+
+          <div id="sourcesConfig"></div>
+
+          <button id="saveConfigBtn">Save</button>
+        </aside>
+      </main>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
