@@ -1,29 +1,73 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>RTI Display Manager</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="app">
-      <header class="top-bar">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>RTI Display Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="app">
+    <header class="frame">
+      <div class="inner-corner inner-top-left"></div>
+      <div class="inner-corner inner-top-right"></div>
+      <div class="inner-corner inner-bottom-left"></div>
+      <div class="inner-corner inner-bottom-right"></div>
+      <div class="connecting-line inner-line-top"></div>
+      <div class="connecting-line inner-line-right"></div>
+      <div class="connecting-line inner-line-bottom"></div>
+      <div class="connecting-line inner-line-left"></div>
+
+      <div class="top-bar-content">
         <div class="brand">
           <div class="logo">RTI</div>
           <div class="title" id="appTitle">RTI Display Manager</div>
         </div>
+
         <div class="top-actions">
-          <button id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">⛶</button>
-          <button id="toggleConfigBtn" title="Settings" aria-label="Settings">⚙</button>
+          <div class="frame">
+            <div class="inner-corner inner-top-left"></div>
+            <div class="inner-corner inner-top-right"></div>
+            <div class="inner-corner inner-bottom-left"></div>
+            <div class="inner-corner inner-bottom-right"></div>
+            <div class="connecting-line inner-line-top"></div>
+            <div class="connecting-line inner-line-right"></div>
+            <div class="connecting-line inner-line-bottom"></div>
+            <div class="connecting-line inner-line-left"></div>
+            <div class="button" id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">⛶</div>
+          </div>
+
+          <div class="frame">
+            <div class="inner-corner inner-top-left"></div>
+            <div class="inner-corner inner-top-right"></div>
+            <div class="inner-corner inner-bottom-left"></div>
+            <div class="inner-corner inner-bottom-right"></div>
+            <div class="connecting-line inner-line-top"></div>
+            <div class="connecting-line inner-line-right"></div>
+            <div class="connecting-line inner-line-bottom"></div>
+            <div class="connecting-line inner-line-left"></div>
+            <div class="button" id="toggleConfigBtn" title="Settings" aria-label="Settings">⚙</div>
+          </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main class="main-layout">
-        <section class="display-area" id="displayArea"></section>
+    <main class="main-layout">
+      <section class="display-area" id="displayArea"></section>
 
+      <div class="frame frame-config-panel">
+        <div class="inner-corner inner-top-left"></div>
+        <div class="inner-corner inner-top-right"></div>
+        <div class="inner-corner inner-bottom-left"></div>
+        <div class="inner-corner inner-bottom-right"></div>
+        <div class="connecting-line inner-line-top"></div>
+        <div class="connecting-line inner-line-right"></div>
+        <div class="connecting-line inner-line-bottom"></div>
+        <div class="connecting-line inner-line-left"></div>
         <aside class="config-panel hidden" id="configPanel">
-          <h2>Layout Settings</h2>
+          <div class="config-panel-title">Layout Settings</div>
           <div class="config-group">
             <label>App Name</label>
             <input type="text" id="inputAppTitle" />
@@ -58,11 +102,23 @@
 
           <div id="sourcesConfig"></div>
 
-          <button id="saveConfigBtn">Save</button>
+          <div class="frame">
+            <div class="inner-corner inner-top-left"></div>
+            <div class="inner-corner inner-top-right"></div>
+            <div class="inner-corner inner-bottom-left"></div>
+            <div class="inner-corner inner-bottom-right"></div>
+            <div class="connecting-line inner-line-top"></div>
+            <div class="connecting-line inner-line-right"></div>
+            <div class="connecting-line inner-line-bottom"></div>
+            <div class="connecting-line inner-line-left"></div>
+            <button id="saveConfigBtn">Save</button>
+          </div>
         </aside>
-      </main>
-    </div>
+      </div>
+    </main>
+  </div>
 
-    <script src="renderer.js"></script>
-  </body>
+  <script src="renderer.js"></script>
+</body>
+
 </html>

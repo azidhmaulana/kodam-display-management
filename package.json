@@ -7,10 +7,9 @@
     "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^34.0.0"
+    "electron": "^39.2.4"
   },
   "dependencies": {
     "electron-store": "^9.0.0"
   }
 }
-

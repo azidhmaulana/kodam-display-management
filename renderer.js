@@ -78,28 +78,36 @@ function renderDisplayArea() {
       slot.className = "display-slot";
 
       const header = document.createElement("div");
-      header.className = "slot-header";
+      header.className = "slot-header frame";
+      
+      // Add decorations helper
+      const addDecorations = (el) => {
+        const corners = ["inner-top-left", "inner-top-right", "inner-bottom-left", "inner-bottom-right"];
+        corners.forEach(c => {
+          const div = document.createElement("div");
+          div.className = `inner-corner ${c}`;
+          el.appendChild(div);
+        });
+        const lines = ["inner-line-top", "inner-line-right", "inner-line-bottom", "inner-line-left"];
+        lines.forEach(l => {
+          const div = document.createElement("div");
+          div.className = `connecting-line ${l}`;
+          el.appendChild(div);
+        });
+      };
+
+      addDecorations(header);
+
       const nameSpan = document.createElement("span");
       nameSpan.className = "slot-name";
       nameSpan.id = `slot-name-${idx}`;
+      // Ensure content is above decorations if needed, or just append
       header.appendChild(nameSpan);
 
-      const actions = document.createElement("div");
-      actions.className = "slot-actions";
-      const fsBtn = document.createElement("button");
-      fsBtn.type = "button";
-      fsBtn.className = "slot-fs-btn";
-      fsBtn.title = "Fullscreen this slot";
-      fsBtn.textContent = "⛶";
-      fsBtn.addEventListener("click", () => {
-        if (document.fullscreenElement === slot) {
-          document.exitFullscreen().catch(() => {});
-        } else {
-          slot.requestFullscreen().catch(() => {});
-        }
-      });
-      actions.appendChild(fsBtn);
-      header.appendChild(actions);
+      // Create wrapper for iframe to hold frame decorations
+      const iframeWrapper = document.createElement("div");
+      iframeWrapper.className = "iframe-wrapper frame";
+      addDecorations(iframeWrapper);
 
       const iframe = document.createElement("iframe");
       iframe.id = `iframe-${idx}`;
@@ -107,9 +115,11 @@ function renderDisplayArea() {
       iframe.allow =
         "autoplay; encrypted-media; fullscreen; picture-in-picture";
       iframe.allowFullscreen = true;
+      
+      iframeWrapper.appendChild(iframe);
 
       slot.appendChild(header);
-      slot.appendChild(iframe);
+      slot.appendChild(iframeWrapper);
       row.appendChild(slot);
 
       slotRefs[idx] = { slot, name: nameSpan, iframe };
@@ -184,6 +194,31 @@ function renderConfigPanel() {
   sources.forEach((source, idx) => {
     const row = document.createElement("div");
     row.className = "config-row";
+
+    // Add corner and line decorations
+    const corners = [
+      "inner-top-left",
+      "inner-top-right",
+      "inner-bottom-left",
+      "inner-bottom-right"
+    ];
+    corners.forEach(cornerClass => {
+      const corner = document.createElement("div");
+      corner.className = `inner-corner ${cornerClass}`;
+      row.appendChild(corner);
+    });
+
+    const lines = [
+      "inner-line-top",
+      "inner-line-right",
+      "inner-line-bottom",
+      "inner-line-left"
+    ];
+    lines.forEach(lineClass => {
+      const line = document.createElement("div");
+      line.className = `connecting-line ${lineClass}`;
+      row.appendChild(line);
+    });
 
     const rowHeader = document.createElement("div");
     rowHeader.className = "config-row-header";
