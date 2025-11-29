@@ -7,11 +7,19 @@ const toggleConfigBtn = document.getElementById("toggleConfigBtn");
 const configPanel = document.getElementById("configPanel");
 const inputAppTitle = document.getElementById("inputAppTitle");
 const sourcesConfigContainer = document.getElementById("sourcesConfig");
+const presetsConfigContainer = document.getElementById("presetsConfig");
 const displayArea = document.getElementById("displayArea");
 const sourceCountSelect = document.getElementById("sourceCountSelect");
 const gridColumnsSelect = document.getElementById("gridColumnsSelect");
 const saveConfigBtn = document.getElementById("saveConfigBtn");
 const fullscreenBtn = document.getElementById("fullscreenBtn");
+const addPresetBtn = document.getElementById("addPresetBtn");
+const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+const tabSections = {
+  layoutTab: document.getElementById("layoutTab"),
+  sourcesTab: document.getElementById("sourcesTab"),
+};
+let activeTab = "layoutTab";
 
 let slotRefs = [];
 let lastGridColumns = null;
@@ -24,7 +32,11 @@ function normalizeStreamUrl(url) {
     const host = u.hostname.replace(/^www\./, "");
 
     // youtube watch -> embed
-    if (host === "youtube.com" || host === "m.youtube.com" || host === "youtu.be") {
+    if (
+      host === "youtube.com" ||
+      host === "m.youtube.com" ||
+      host === "youtu.be"
+    ) {
       let videoId = null;
       if (host === "youtu.be") {
         videoId = u.pathname.slice(1);
@@ -48,6 +60,21 @@ function normalizeStreamUrl(url) {
   }
 }
 
+function isYouTubeUrl(url) {
+  if (!url) return false;
+  try {
+    const host = new URL(url.trim()).hostname.replace(/^www\./, "");
+    return (
+      host === "youtube.com" ||
+      host === "m.youtube.com" ||
+      host === "youtu.be" ||
+      host.endsWith(".youtube.com")
+    );
+  } catch (err) {
+    return false;
+  }
+}
+
 async function loadPresetsFallback() {
   try {
     const res = await fetch("stream-presets.json");
@@ -57,6 +84,18 @@ async function loadPresetsFallback() {
   } catch (err) {
     return [];
   }
+}
+
+function setActiveTab(tabId = "layoutTab") {
+  activeTab = tabId;
+  tabButtons.forEach((btn) => {
+    const target = btn.dataset.tab;
+    btn.classList.toggle("active", target === tabId);
+  });
+  Object.entries(tabSections).forEach(([key, section]) => {
+    if (!section) return;
+    section.classList.toggle("active", key === tabId);
+  });
 }
 
 function renderDisplayArea() {
@@ -79,17 +118,27 @@ function renderDisplayArea() {
 
       const header = document.createElement("div");
       header.className = "slot-header frame";
-      
+
       // Add decorations helper
       const addDecorations = (el) => {
-        const corners = ["inner-top-left", "inner-top-right", "inner-bottom-left", "inner-bottom-right"];
-        corners.forEach(c => {
+        const corners = [
+          "inner-top-left",
+          "inner-top-right",
+          "inner-bottom-left",
+          "inner-bottom-right",
+        ];
+        corners.forEach((c) => {
           const div = document.createElement("div");
           div.className = `inner-corner ${c}`;
           el.appendChild(div);
         });
-        const lines = ["inner-line-top", "inner-line-right", "inner-line-bottom", "inner-line-left"];
-        lines.forEach(l => {
+        const lines = [
+          "inner-line-top",
+          "inner-line-right",
+          "inner-line-bottom",
+          "inner-line-left",
+        ];
+        lines.forEach((l) => {
           const div = document.createElement("div");
           div.className = `connecting-line ${l}`;
           el.appendChild(div);
@@ -115,7 +164,7 @@ function renderDisplayArea() {
       iframe.allow =
         "autoplay; encrypted-media; fullscreen; picture-in-picture";
       iframe.allowFullscreen = true;
-      
+
       iframeWrapper.appendChild(iframe);
 
       slot.appendChild(header);
@@ -193,16 +242,16 @@ function renderConfigPanel() {
 
   sources.forEach((source, idx) => {
     const row = document.createElement("div");
-    row.className = "config-row";
+    row.className = "preset-row";
 
     // Add corner and line decorations
     const corners = [
       "inner-top-left",
       "inner-top-right",
       "inner-bottom-left",
-      "inner-bottom-right"
+      "inner-bottom-right",
     ];
-    corners.forEach(cornerClass => {
+    corners.forEach((cornerClass) => {
       const corner = document.createElement("div");
       corner.className = `inner-corner ${cornerClass}`;
       row.appendChild(corner);
@@ -212,9 +261,9 @@ function renderConfigPanel() {
       "inner-line-top",
       "inner-line-right",
       "inner-line-bottom",
-      "inner-line-left"
+      "inner-line-left",
     ];
-    lines.forEach(lineClass => {
+    lines.forEach((lineClass) => {
       const line = document.createElement("div");
       line.className = `connecting-line ${lineClass}`;
       row.appendChild(line);
@@ -225,7 +274,7 @@ function renderConfigPanel() {
 
     const badge = document.createElement("div");
     badge.className = "grid-badge";
-    badge.textContent = `Source #${idx + 1}`;
+    badge.textContent = `Display #${idx + 1}`;
     rowHeader.appendChild(badge);
 
     const removeBtn = document.createElement("button");
@@ -241,13 +290,13 @@ function renderConfigPanel() {
     const groupPreset = document.createElement("div");
     groupPreset.className = "config-group";
     const labelPreset = document.createElement("label");
-    labelPreset.textContent = "Select Preset";
+    labelPreset.textContent = "Select Source";
     const presetSelect = document.createElement("select");
     presetSelect.className = "preset-select";
     presetSelect.dataset.index = idx;
     const emptyOpt = document.createElement("option");
     emptyOpt.value = "";
-    emptyOpt.textContent = "- Select preset -";
+    emptyOpt.textContent = "- Select Source -";
     presetSelect.appendChild(emptyOpt);
     presetsCache.forEach((preset, pIdx) => {
       const opt = document.createElement("option");
@@ -312,6 +361,55 @@ function renderConfigPanel() {
 
     sourcesConfigContainer.appendChild(row);
   });
+
+  renderPresetsPanel();
+  setActiveTab(activeTab);
+}
+
+function renderPresetsPanel() {
+  if (!currentConfig) return;
+  const presets = currentConfig.streamPresets || [];
+  presetsConfigContainer.innerHTML = "";
+
+  presets.forEach((preset, idx) => {
+    const row = document.createElement("div");
+    row.className = "preset-row";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "×";
+    removeBtn.className = "remove-preset";
+    removeBtn.dataset.index = idx;
+    row.appendChild(removeBtn);
+
+    const groupLabel = document.createElement("div");
+    groupLabel.className = "config-group";
+    const labelLabel = document.createElement("label");
+    labelLabel.textContent = "Preset Label";
+    const inputLabel = document.createElement("input");
+    inputLabel.type = "text";
+    inputLabel.value = preset.label || "";
+    inputLabel.dataset.index = idx;
+    inputLabel.dataset.field = "label";
+    groupLabel.appendChild(labelLabel);
+    groupLabel.appendChild(inputLabel);
+
+    const groupUrl = document.createElement("div");
+    groupUrl.className = "config-group";
+    const labelUrl = document.createElement("label");
+    labelUrl.textContent = "Preset URL";
+    const inputUrl = document.createElement("input");
+    inputUrl.type = "text";
+    inputUrl.value = preset.url || "";
+    inputUrl.dataset.index = idx;
+    inputUrl.dataset.field = "url";
+    groupUrl.appendChild(labelUrl);
+    groupUrl.appendChild(inputUrl);
+
+    row.appendChild(groupLabel);
+    row.appendChild(groupUrl);
+    presetsConfigContainer.appendChild(row);
+  });
 }
 
 toggleConfigBtn.addEventListener("click", () => {
@@ -326,9 +424,16 @@ fullscreenBtn.addEventListener("click", () => {
   }
 });
 
+tabButtons.forEach((btn) => {
+  btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+});
+
 sourceCountSelect.addEventListener("change", () => {
   if (!currentConfig) return;
-  const desired = Math.min(Math.max(Number(sourceCountSelect.value) || 1, 1), 10);
+  const desired = Math.min(
+    Math.max(Number(sourceCountSelect.value) || 1, 1),
+    10
+  );
   const current = currentConfig.sources.length;
   if (desired > current) {
     const toAdd = desired - current;
@@ -367,7 +472,10 @@ sourcesConfigContainer.addEventListener("click", (event) => {
     if (!Number.isInteger(idx)) return;
     currentConfig.sources.splice(idx, 1);
     const desired = Math.min(
-      Math.max(Number(sourceCountSelect.value) || currentConfig.sources.length, 1),
+      Math.max(
+        Number(sourceCountSelect.value) || currentConfig.sources.length,
+        1
+      ),
       10
     );
     currentConfig.sources = currentConfig.sources.slice(0, desired);
@@ -412,7 +520,8 @@ sourcesConfigContainer.addEventListener("change", (event) => {
     const preset = presets[presetIdx];
     if (preset) {
       currentConfig.sources[idx].url = normalizeStreamUrl(preset.url || "");
-      currentConfig.sources[idx].name = preset.label || currentConfig.sources[idx].name;
+      currentConfig.sources[idx].name =
+        preset.label || currentConfig.sources[idx].name;
       const nameInput = sourcesConfigContainer.querySelector(
         `input[data-field="name"][data-index="${idx}"]`
       );
@@ -424,6 +533,62 @@ sourcesConfigContainer.addEventListener("change", (event) => {
       applyLayout();
     }
   }
+});
+
+function syncPresetInputs() {
+  if (!currentConfig) return;
+  const collected = [];
+  const rows = presetsConfigContainer.querySelectorAll(".preset-row");
+  rows.forEach((row, idx) => {
+    const labelInput = row.querySelector('input[data-field="label"]');
+    const urlInput = row.querySelector('input[data-field="url"]');
+    collected.push({
+      label: labelInput ? labelInput.value : `Preset ${idx + 1}`,
+      url: urlInput ? normalizeStreamUrl(urlInput.value || "") : "",
+    });
+  });
+  currentConfig.streamPresets = collected;
+}
+
+presetsConfigContainer.addEventListener("click", (event) => {
+  if (!currentConfig) return;
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  if (target.classList.contains("remove-preset")) {
+    const idx = Number(target.dataset.index);
+    if (!Number.isInteger(idx)) return;
+    currentConfig.streamPresets.splice(idx, 1);
+    presetsCache = currentConfig.streamPresets;
+    renderConfigPanel();
+  }
+});
+
+presetsConfigContainer.addEventListener("input", (event) => {
+  if (!currentConfig) return;
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return;
+  const idx = Number(target.dataset.index);
+  const field = target.dataset.field;
+  if (!Number.isInteger(idx) || !field) return;
+
+  if (!currentConfig.streamPresets[idx]) {
+    currentConfig.streamPresets[idx] = { label: "", url: "" };
+  }
+  currentConfig.streamPresets[idx][field] =
+    field === "url"
+      ? normalizeStreamUrl(target.value || "")
+      : target.value || "";
+});
+
+addPresetBtn.addEventListener("click", () => {
+  if (!currentConfig) return;
+  const newPreset = {
+    label: `Preset ${currentConfig.streamPresets.length + 1}`,
+    url: "",
+  };
+  currentConfig.streamPresets.push(newPreset);
+  presetsCache = currentConfig.streamPresets;
+  renderConfigPanel();
 });
 
 saveConfigBtn.addEventListener("click", async () => {
@@ -453,11 +618,46 @@ saveConfigBtn.addEventListener("click", async () => {
     5
   );
 
+  syncPresetInputs();
+  newConfig.streamPresets = currentConfig.streamPresets;
+  if (currentConfig.streamPresets) {
+    const res = await window.electronAPI.savePresets(
+      currentConfig.streamPresets
+    );
+    if (res?.streamPresets) {
+      currentConfig.streamPresets = res.streamPresets;
+      presetsCache = res.streamPresets;
+    }
+  }
+
   currentConfig = await window.electronAPI.setConfig(newConfig);
   renderDisplayArea();
   applyLayout(true); // force iframe reload after saving
   configPanel.classList.add("hidden");
 });
+
+async function migrateYouTubeSourcesToPresets() {
+  if (!currentConfig) return;
+  const presets = currentConfig.streamPresets || [];
+  if (!presets.length) return;
+  const hasYouTube = (currentConfig.sources || []).some((s) =>
+    isYouTubeUrl(s.url)
+  );
+  if (!hasYouTube) return;
+
+  const desiredLen = Math.min(
+    Math.max(currentConfig.sources.length || 1, 1),
+    10
+  );
+  const newSources = presets.slice(0, desiredLen).map((p, idx) => ({
+    name: p.label || `Preset ${idx + 1}`,
+    url: normalizeStreamUrl(p.url || ""),
+    weight: 1,
+  }));
+  currentConfig.sources = newSources;
+  currentConfig = await window.electronAPI.setConfig(currentConfig);
+  presetsCache = currentConfig.streamPresets || [];
+}
 
 // INIT
 (async () => {
@@ -466,10 +666,18 @@ saveConfigBtn.addEventListener("click", async () => {
     currentConfig.sources = currentConfig.sources.slice(0, 10);
   }
   if (!currentConfig.gridColumns) currentConfig.gridColumns = 3;
-  if (!currentConfig.streamPresets || currentConfig.streamPresets.length === 0) {
+  if (!Array.isArray(currentConfig.streamPresets))
+    currentConfig.streamPresets = [];
+  if (
+    !currentConfig.streamPresets ||
+    currentConfig.streamPresets.length === 0
+  ) {
     currentConfig.streamPresets = await loadPresetsFallback();
   }
+  await migrateYouTubeSourcesToPresets();
+  setActiveTab(activeTab);
   renderDisplayArea();
   applyLayout();
   renderConfigPanel();
 })();
+

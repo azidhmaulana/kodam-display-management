@@ -4,12 +4,38 @@
   "description": "Simple multi-PC display manager",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist:win": "electron-builder -w",
+    "dist:win:portable": "electron-builder -w portable",
+    "dist:dir": "electron-builder --dir"
   },
   "devDependencies": {
-    "electron": "^39.2.4"
+    "electron": "^39.2.4",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "electron-store": "^9.0.0"
+  },
+  "build": {
+    "appId": "com.kodam.displaymanager",
+    "productName": "Display Management",
+    "asar": true,
+    "files": [
+      "**/*",
+      "!node_modules/.cache/**"
+    ],
+    "extraResources": [
+      "stream-presets.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    }
   }
 }

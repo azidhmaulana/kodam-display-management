@@ -1,63 +1,15 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Display Management</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>RTI Display Manager</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-
-<body>
-  <div id="app">
-    <header class="frame">
-      <div class="inner-corner inner-top-left"></div>
-      <div class="inner-corner inner-top-right"></div>
-      <div class="inner-corner inner-bottom-left"></div>
-      <div class="inner-corner inner-bottom-right"></div>
-      <div class="connecting-line inner-line-top"></div>
-      <div class="connecting-line inner-line-right"></div>
-      <div class="connecting-line inner-line-bottom"></div>
-      <div class="connecting-line inner-line-left"></div>
-
-      <div class="top-bar-content">
-        <div class="brand">
-          <div class="logo">RTI</div>
-          <div class="title" id="appTitle">RTI Display Manager</div>
-        </div>
-
-        <div class="top-actions">
-          <div class="frame">
-            <div class="inner-corner inner-top-left"></div>
-            <div class="inner-corner inner-top-right"></div>
-            <div class="inner-corner inner-bottom-left"></div>
-            <div class="inner-corner inner-bottom-right"></div>
-            <div class="connecting-line inner-line-top"></div>
-            <div class="connecting-line inner-line-right"></div>
-            <div class="connecting-line inner-line-bottom"></div>
-            <div class="connecting-line inner-line-left"></div>
-            <div class="button" id="fullscreenBtn" title="Fullscreen" aria-label="Fullscreen">⛶</div>
-          </div>
-
-          <div class="frame">
-            <div class="inner-corner inner-top-left"></div>
-            <div class="inner-corner inner-top-right"></div>
-            <div class="inner-corner inner-bottom-left"></div>
-            <div class="inner-corner inner-bottom-right"></div>
-            <div class="connecting-line inner-line-top"></div>
-            <div class="connecting-line inner-line-right"></div>
-            <div class="connecting-line inner-line-bottom"></div>
-            <div class="connecting-line inner-line-left"></div>
-            <div class="button" id="toggleConfigBtn" title="Settings" aria-label="Settings">⚙</div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="main-layout">
-      <section class="display-area" id="displayArea"></section>
-
-      <div class="frame frame-config-panel">
+  <body>
+    <div id="app">
+      <header class="frame">
         <div class="inner-corner inner-top-left"></div>
         <div class="inner-corner inner-top-right"></div>
         <div class="inner-corner inner-bottom-left"></div>
@@ -66,59 +18,146 @@
         <div class="connecting-line inner-line-right"></div>
         <div class="connecting-line inner-line-bottom"></div>
         <div class="connecting-line inner-line-left"></div>
-        <aside class="config-panel hidden" id="configPanel">
-          <div class="config-panel-title">Layout Settings</div>
-          <div class="config-group">
-            <label>App Name</label>
-            <input type="text" id="inputAppTitle" />
+
+        <div class="top-bar-content">
+          <div class="brand">
+            <img src="logo.png" alt="" style="width: 25px" />
+            <div class="title" id="appTitle">Display Management</div>
           </div>
 
-          <div class="config-group">
-            <label>Number of Sources (1–10)</label>
-            <select id="sourceCountSelect">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
+          <div class="top-actions">
+            <div class="frame">
+              <div class="inner-corner inner-top-left"></div>
+              <div class="inner-corner inner-top-right"></div>
+              <div class="inner-corner inner-bottom-left"></div>
+              <div class="inner-corner inner-bottom-right"></div>
+              <div class="connecting-line inner-line-top"></div>
+              <div class="connecting-line inner-line-right"></div>
+              <div class="connecting-line inner-line-bottom"></div>
+              <div class="connecting-line inner-line-left"></div>
+              <div
+                class="button"
+                id="fullscreenBtn"
+                title="Fullscreen"
+                aria-label="Fullscreen"
+              >
+                ⛶
+              </div>
+            </div>
+
+            <div class="frame">
+              <div class="inner-corner inner-top-left"></div>
+              <div class="inner-corner inner-top-right"></div>
+              <div class="inner-corner inner-bottom-left"></div>
+              <div class="inner-corner inner-bottom-right"></div>
+              <div class="connecting-line inner-line-top"></div>
+              <div class="connecting-line inner-line-right"></div>
+              <div class="connecting-line inner-line-bottom"></div>
+              <div class="connecting-line inner-line-left"></div>
+              <div
+                class="button"
+                id="toggleConfigBtn"
+                title="Settings"
+                aria-label="Settings"
+              >
+                ⚙
+              </div>
+            </div>
           </div>
+        </div>
+      </header>
 
-          <div class="config-group">
-            <label>Grid (columns per row)</label>
-            <select id="gridColumnsSelect">
-              <option value="1">1 column</option>
-              <option value="2">2 columns</option>
-              <option value="3">3 columns</option>
-              <option value="4">4 columns</option>
-              <option value="5">5 columns</option>
-            </select>
-          </div>
+      <main class="main-layout">
+        <section class="display-area" id="displayArea"></section>
 
-          <div id="sourcesConfig"></div>
+        <div class="frame frame-config-panel">
+          <div class="inner-corner inner-top-left"></div>
+          <div class="inner-corner inner-top-right"></div>
+          <div class="inner-corner inner-bottom-left"></div>
+          <div class="inner-corner inner-bottom-right"></div>
+          <div class="connecting-line inner-line-top"></div>
+          <div class="connecting-line inner-line-right"></div>
+          <div class="connecting-line inner-line-bottom"></div>
+          <div class="connecting-line inner-line-left"></div>
+          <aside class="config-panel hidden" id="configPanel">
+            <div class="config-panel-title">Settings</div>
 
-          <div class="frame">
-            <div class="inner-corner inner-top-left"></div>
-            <div class="inner-corner inner-top-right"></div>
-            <div class="inner-corner inner-bottom-left"></div>
-            <div class="inner-corner inner-bottom-right"></div>
-            <div class="connecting-line inner-line-top"></div>
-            <div class="connecting-line inner-line-right"></div>
-            <div class="connecting-line inner-line-bottom"></div>
-            <div class="connecting-line inner-line-left"></div>
-            <button id="saveConfigBtn">Save</button>
-          </div>
-        </aside>
-      </div>
-    </main>
-  </div>
+            <div class="tab-nav">
+              <button class="tab-btn active" data-tab="layoutTab">
+                Layout
+              </button>
+              <button class="tab-btn" data-tab="sourcesTab">Sources</button>
+            </div>
 
-  <script src="renderer.js"></script>
-</body>
+            <div id="layoutTab" class="tab-section active">
+              <div class="config-group">
+                <label>App Name</label>
+                <input type="text" id="inputAppTitle" />
+              </div>
 
+              <div class="config-group">
+                <label>Number of Sources (1–10)</label>
+                <select id="sourceCountSelect">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+
+              <div class="config-group">
+                <label>Grid (columns per row)</label>
+                <select id="gridColumnsSelect">
+                  <option value="1">1 column</option>
+                  <option value="2">2 columns</option>
+                  <option value="3">3 columns</option>
+                  <option value="4">4 columns</option>
+                  <option value="5">5 columns</option>
+                </select>
+              </div>
+
+              <div id="sourcesConfig"></div>
+            </div>
+
+            <div id="sourcesTab" class="tab-section">
+              <div class="config-panel-title-row" style="margin-top: 20px">
+                <div class="config-panel-title">Stream Sources</div>
+                <button
+                  id="addPresetBtn"
+                  type="button"
+                  class="icon-btn add-preset-btn"
+                  title="Add preset"
+                  aria-label="Add preset"
+                >
+                  +
+                </button>
+              </div>
+              <div id="presetsConfig"></div>
+            </div>
+
+            <div class="frame">
+              <div class="inner-corner inner-top-left"></div>
+              <div class="inner-corner inner-top-right"></div>
+              <div class="inner-corner inner-bottom-left"></div>
+              <div class="inner-corner inner-bottom-right"></div>
+              <div class="connecting-line inner-line-top"></div>
+              <div class="connecting-line inner-line-right"></div>
+              <div class="connecting-line inner-line-bottom"></div>
+              <div class="connecting-line inner-line-left"></div>
+              <button id="saveConfigBtn">Save</button>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
 </html>
+

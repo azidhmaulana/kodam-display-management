@@ -3,14 +3,24 @@ const { app, BrowserWindow, ipcMain, session } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
-function loadPresets() {
-  const presetsPath = path.join(__dirname, "stream-presets.json");
-  try {
-    const raw = fs.readFileSync(presetsPath, "utf-8");
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
-  } catch (err) {
-    // ignore and fall through
+const bundledPresetsPath = path.join(__dirname, "stream-presets.json");
+function getLegacyPresetsPath() {
+  return path.join(app.getPath("userData"), "stream-presets.json");
+}
+
+function loadBundledPresets() {
+  const legacyPath = getLegacyPresetsPath();
+  const candidates = [legacyPath, bundledPresetsPath];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) {
+        const raw = fs.readFileSync(p, "utf-8");
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (err) {
+      // ignore and fall through
+    }
   }
   // If file missing/invalid, return empty so renderer fallback can decide.
   return [];
@@ -23,9 +33,10 @@ async function ensureStore() {
   const Store = (await import("electron-store")).default;
   store = new Store({
     defaults: {
-      appTitle: "RTI Display Manager",
-      logoText: "RTI",
+      appTitle: "Display Management",
+      logoText: "Display Management",
       gridColumns: 3,
+      streamPresets: loadBundledPresets(),
       sources: [
         { name: "PC 1", url: "https://example.com", weight: 1 },
         { name: "PC 2", url: "https://example.com", weight: 1 },
@@ -88,17 +99,22 @@ ipcMain.handle("config:get", async () => {
   const s = await ensureStore();
   return {
     ...s.store,
-    streamPresets: loadPresets(),
   };
 });
 
 ipcMain.handle("config:set", async (event, newConfig) => {
   const s = await ensureStore();
-  const toSave = { ...newConfig };
-  delete toSave.streamPresets; // keep presets external
-  s.set(toSave);
+  s.set({ ...newConfig });
   return {
     ...s.store,
-    streamPresets: loadPresets(),
+  };
+});
+
+ipcMain.handle("presets:save", async (_event, presets) => {
+  const s = await ensureStore();
+  const safePresets = Array.isArray(presets) ? presets : [];
+  s.set("streamPresets", safePresets);
+  return {
+    streamPresets: s.get("streamPresets", []),
   };
 });
