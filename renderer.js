@@ -208,7 +208,8 @@ function applyLayout(forceReload = false) {
     const weight = Number(source.weight) || 1;
     // Use flex-grow directly for smoother proportional resizing
     ref.slot.style.flex = `${weight} 1 0`;
-    ref.name.textContent = source.name || `PC ${idx + 1}`;
+    const baseName = source.name || `PC ${idx + 1}`;
+    ref.name.textContent = `Display #${idx + 1} - ${baseName}`;
     const targetUrl = source.url || "about:blank";
     const currentUrl = ref.iframe.dataset.currentUrl;
     if (forceReload || currentUrl !== targetUrl) {
@@ -280,18 +281,28 @@ function renderConfigPanel() {
     // Create frame wrapper for remove button
     const removeBtnFrame = document.createElement("div");
     removeBtnFrame.className = "frame remove-btn-frame";
-    
+
     // Add corner decorations
-    const btnCorners = ["inner-top-left", "inner-top-right", "inner-bottom-left", "inner-bottom-right"];
-    btnCorners.forEach(cornerClass => {
+    const btnCorners = [
+      "inner-top-left",
+      "inner-top-right",
+      "inner-bottom-left",
+      "inner-bottom-right",
+    ];
+    btnCorners.forEach((cornerClass) => {
       const corner = document.createElement("div");
       corner.className = `inner-corner ${cornerClass}`;
       removeBtnFrame.appendChild(corner);
     });
-    
+
     // Add line decorations
-    const btnLines = ["inner-line-top", "inner-line-right", "inner-line-bottom", "inner-line-left"];
-    btnLines.forEach(lineClass => {
+    const btnLines = [
+      "inner-line-top",
+      "inner-line-right",
+      "inner-line-bottom",
+      "inner-line-left",
+    ];
+    btnLines.forEach((lineClass) => {
       const line = document.createElement("div");
       line.className = `connecting-line ${lineClass}`;
       removeBtnFrame.appendChild(line);
@@ -302,7 +313,7 @@ function renderConfigPanel() {
     removeBtn.textContent = "×";
     removeBtn.className = "remove-source";
     removeBtn.dataset.index = idx;
-    
+
     removeBtnFrame.appendChild(removeBtn);
     rowHeader.appendChild(removeBtnFrame);
 
@@ -407,7 +418,7 @@ function renderPresetsPanel() {
     const groupLabel = document.createElement("div");
     groupLabel.className = "config-group";
     const labelLabel = document.createElement("label");
-    labelLabel.textContent = "Preset Label";
+    labelLabel.textContent = "Source Label";
     const inputLabel = document.createElement("input");
     inputLabel.type = "text";
     inputLabel.value = preset.label || "";
@@ -617,7 +628,7 @@ saveConfigBtn.addEventListener("click", async () => {
   if (!currentConfig) return;
 
   const newConfig = { ...currentConfig };
-  newConfig.appTitle = inputAppTitle.value || "Display Manager";
+  newConfig.appTitle = inputAppTitle.value || "Display Management";
 
   const inputs = sourcesConfigContainer.querySelectorAll("input");
   inputs.forEach((input) => {
@@ -702,4 +713,3 @@ async function migrateYouTubeSourcesToPresets() {
   applyLayout();
   renderConfigPanel();
 })();
-
