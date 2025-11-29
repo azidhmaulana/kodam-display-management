@@ -46,8 +46,11 @@ body {
 
 .frame {
   position: relative;
-  background-image:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+  background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
     linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   overflow: hidden;
@@ -187,8 +190,11 @@ body {
 }
 
 .top-actions .frame:hover {
-  background-image:
-    linear-gradient(90deg, rgba(61, 217, 163, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(
+      90deg,
+      rgba(61, 217, 163, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(rgba(61, 217, 163, 0.1) 1px, transparent 1px);
   box-shadow: 0 0 8px rgba(61, 217, 163, 0.3);
 }
@@ -201,33 +207,30 @@ body {
 
 .top-actions .button {
   background-color: transparent;
-  color: var(--text);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  font-size: 16px;
-  line-height: 1;
+  padding: 6px; /* Add padding to make icon smaller than frame */
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-#fullscreenBtn {
-  font-size: 16px;
-  line-height: 1;
-  transform: translateY(-1px);
+.top-actions .button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: filter 0.2s ease;
 }
 
-#toggleConfigBtn {
-  font-size: 18px;
-  line-height: 1;
-  transform: translateY(-2px);
-}
-
-.top-actions .frame:hover .button {
-  color: var(--accent);
+.top-actions .frame:hover .button img {
+  /* Filter to turn white into #3dd9a3 (accent) */
+  filter: invert(76%) sepia(35%) saturate(962%) hue-rotate(105deg)
+    brightness(93%) contrast(89%);
+  filter: drop-shadow(0 0 2px rgba(61, 217, 163, 0.5));
 }
 
 .main-layout {
@@ -263,7 +266,11 @@ body {
   border: 1px solid var(--border);
   box-shadow: inset 0 0 0 1px rgba(61, 217, 163, 0.08);
   min-width: 0;
-  background: linear-gradient(180deg, rgba(15, 30, 47, 0.7), rgba(9, 18, 29, 0.9));
+  background: linear-gradient(
+    180deg,
+    rgba(15, 30, 47, 0.7),
+    rgba(9, 18, 29, 0.9)
+  );
 }
 
 .slot-header {
@@ -539,17 +546,98 @@ body {
   letter-spacing: 0.06em;
 }
 
-.config-row .remove-source {
-  padding: 4px 8px;
-  background: transparent;
-  color: #ffb3c1;
-  border: 1px solid rgba(255, 95, 109, 0.6);
-  border-radius: 4px;
+.remove-btn-frame {
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
-.config-row .remove-source:hover {
+/* Smaller corners and lines for small button */
+.remove-btn-frame .inner-corner {
+  width: 6px;
+  height: 6px;
+  z-index: 2;
+}
+
+.remove-btn-frame .inner-top-left {
+  border-width: 2px 0 0 2px;
+}
+
+.remove-btn-frame .inner-top-right {
+  border-width: 2px 2px 0 0;
+}
+
+.remove-btn-frame .inner-bottom-left {
+  border-width: 0 0 2px 2px;
+}
+
+.remove-btn-frame .inner-bottom-right {
+  border-width: 0 2px 2px 0;
+}
+
+.remove-btn-frame .inner-line-top,
+.remove-btn-frame .inner-line-bottom {
+  display: none;
+}
+
+.remove-btn-frame .inner-line-left,
+.remove-btn-frame .inner-line-right {
+  display: none;
+}
+
+.config-row .remove-source {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: #ffb3c1;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  transition: color 0.2s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.remove-btn-frame:hover {
+  background-image: linear-gradient(
+      90deg,
+      rgba(255, 95, 109, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(rgba(255, 95, 109, 0.1) 1px, transparent 1px);
+  box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
+}
+
+.preset-row {
+  border: 1px dashed var(--border);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.preset-row .remove-preset {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 95, 109, 0.6);
+  color: #ffb3c1;
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.preset-row .remove-preset:hover {
   box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
 }
 
@@ -587,3 +675,4 @@ button#saveConfigBtn {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
