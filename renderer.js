@@ -408,12 +408,67 @@ function renderPresetsPanel() {
     const row = document.createElement("div");
     row.className = "preset-row";
 
+    // Add corner and line decorations
+    const corners = [
+      "inner-top-left",
+      "inner-top-right",
+      "inner-bottom-left",
+      "inner-bottom-right",
+    ];
+    corners.forEach((cornerClass) => {
+      const corner = document.createElement("div");
+      corner.className = `inner-corner ${cornerClass}`;
+      row.appendChild(corner);
+    });
+
+    const lines = [
+      "inner-line-top",
+      "inner-line-right",
+      "inner-line-bottom",
+      "inner-line-left",
+    ];
+    lines.forEach((lineClass) => {
+      const line = document.createElement("div");
+      line.className = `connecting-line ${lineClass}`;
+      row.appendChild(line);
+    });
+
+    // Row header with badge and remove button
+    const rowHeader = document.createElement("div");
+    rowHeader.className = "config-row-header";
+
+    const badge = document.createElement("div");
+    badge.className = "grid-badge";
+    badge.textContent = `Source #${idx + 1}`;
+    rowHeader.appendChild(badge);
+
+    // Create frame wrapper for remove button
+    const removeBtnFrame = document.createElement("div");
+    removeBtnFrame.className = "frame remove-btn-frame";
+
+    // Add corner decorations for remove button
+    const btnCorners = [
+      "inner-top-left",
+      "inner-top-right",
+      "inner-bottom-left",
+      "inner-bottom-right",
+    ];
+    btnCorners.forEach((cornerClass) => {
+      const corner = document.createElement("div");
+      corner.className = `inner-corner ${cornerClass}`;
+      removeBtnFrame.appendChild(corner);
+    });
+
     const removeBtn = document.createElement("button");
     removeBtn.type = "button";
     removeBtn.textContent = "×";
-    removeBtn.className = "remove-preset";
+    removeBtn.className = "remove-source";
     removeBtn.dataset.index = idx;
-    row.appendChild(removeBtn);
+
+    removeBtnFrame.appendChild(removeBtn);
+    rowHeader.appendChild(removeBtnFrame);
+
+    row.appendChild(rowHeader);
 
     const groupLabel = document.createElement("div");
     groupLabel.className = "config-group";
@@ -587,7 +642,7 @@ presetsConfigContainer.addEventListener("click", (event) => {
   if (!currentConfig) return;
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
-  if (target.classList.contains("remove-preset")) {
+  if (target.classList.contains("remove-source")) {
     const idx = Number(target.dataset.index);
     if (!Number.isInteger(idx)) return;
     currentConfig.streamPresets.splice(idx, 1);

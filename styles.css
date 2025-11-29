@@ -213,7 +213,7 @@ body {
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 6px; /* Add padding to make icon smaller than frame */
+  padding: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -227,7 +227,6 @@ body {
 }
 
 .top-actions .frame:hover .button img {
-  /* Filter to turn white into #3dd9a3 (accent) */
   filter: invert(76%) sepia(35%) saturate(962%) hue-rotate(105deg)
     brightness(93%) contrast(89%);
   filter: drop-shadow(0 0 2px rgba(61, 217, 163, 0.5));
@@ -244,7 +243,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px;
+  padding: 10px 4px;
   min-width: 0;
 }
 
@@ -363,27 +362,78 @@ body {
   gap: 10px;
 }
 
-.icon-btn {
-  border: 1px solid var(--border);
-  background: var(--panel-2);
-  color: var(--text);
-  border-radius: 6px;
-  padding: 6px 10px;
+.add-preset-btn-frame {
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
-.icon-btn:hover {
-  box-shadow: 0 0 0 1px rgba(61, 217, 163, 0.4);
+.add-preset-btn-frame .inner-corner {
+  width: 8px;
+  height: 8px;
+  z-index: 2;
+}
+
+.add-preset-btn-frame .inner-top-left {
+  border-width: 2px 0 0 2px;
+}
+
+.add-preset-btn-frame .inner-top-right {
+  border-width: 2px 2px 0 0;
+}
+
+.add-preset-btn-frame .inner-bottom-left {
+  border-width: 0 0 2px 2px;
+}
+
+.add-preset-btn-frame .inner-bottom-right {
+  border-width: 0 2px 2px 0;
+}
+
+.add-preset-btn-frame .inner-line-top,
+.add-preset-btn-frame .inner-line-bottom,
+.add-preset-btn-frame .inner-line-left,
+.add-preset-btn-frame .inner-line-right {
+  display: none;
 }
 
 .add-preset-btn {
-  background: #0bbf72;
-  color: #041512;
-  font-weight: 900;
-  font-size: 18px;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1;
-  min-width: 34px;
+  transition: color 0.2s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.add-preset-btn-frame:hover {
+  background-image: linear-gradient(
+      90deg,
+      rgba(61, 217, 163, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(rgba(61, 217, 163, 0.1) 1px, transparent 1px);
+  box-shadow: 0 0 8px rgba(61, 217, 163, 0.3);
+}
+
+.add-preset-btn-frame:hover .inner-corner {
+  border-color: var(--accent);
+}
+
+.add-preset-btn-frame:hover .add-preset-btn {
+  color: var(--accent-2);
 }
 
 .tab-nav {
@@ -554,10 +604,10 @@ body {
   transition: all 0.2s ease;
 }
 
-/* Smaller corners and lines for small button */
+/* Match header button corner styling */
 .remove-btn-frame .inner-corner {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   z-index: 2;
 }
 
@@ -577,17 +627,20 @@ body {
   border-width: 0 2px 2px 0;
 }
 
+/* Show corners with white color */
 .remove-btn-frame .inner-line-top,
-.remove-btn-frame .inner-line-bottom {
-  display: none;
-}
-
+.remove-btn-frame .inner-line-bottom,
 .remove-btn-frame .inner-line-left,
 .remove-btn-frame .inner-line-right {
   display: none;
 }
 
-.config-row .remove-source {
+.remove-btn-frame .inner-corner {
+  border-color: #ffffff;
+}
+
+.config-row .remove-source,
+.preset-row .remove-source {
   padding: 0;
   width: 100%;
   height: 100%;
@@ -616,54 +669,51 @@ body {
   box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
 }
 
-.preset-row {
-  border: 1px dashed var(--border);
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  position: relative;
+.remove-btn-frame:hover .inner-corner {
+  border-color: var(--danger);
 }
 
-.preset-row .remove-preset {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
-  border: 1px solid rgba(255, 95, 109, 0.6);
-  color: #ffb3c1;
-  border-radius: 4px;
-  padding: 2px 6px;
-  cursor: pointer;
-  transition: box-shadow 0.15s ease;
-}
-
-.preset-row .remove-preset:hover {
-  box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
+.remove-btn-frame:hover .remove-source {
+  color: var(--danger);
 }
 
 .preset-row {
-  border: 1px dashed var(--border);
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
   position: relative;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.preset-row .remove-preset {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
-  border: 1px solid rgba(255, 95, 109, 0.6);
-  color: #ffb3c1;
-  border-radius: 4px;
-  padding: 2px 6px;
-  cursor: pointer;
-  transition: box-shadow 0.15s ease;
+/* Smaller corners and lines for preset-row to match config-row */
+.preset-row .inner-corner {
+  width: 6px;
+  height: 6px;
+  border-width: 1px;
 }
 
-.preset-row .remove-preset:hover {
-  box-shadow: 0 0 8px rgba(255, 95, 109, 0.4);
+.preset-row .inner-top-left {
+  border-width: 1px 0 0 1px;
+}
+
+.preset-row .inner-top-right {
+  border-width: 1px 1px 0 0;
+}
+
+.preset-row .inner-bottom-left {
+  border-width: 0 0 1px 1px;
+}
+
+.preset-row .inner-bottom-right {
+  border-width: 0 1px 1px 0;
+}
+
+.preset-row .inner-line-top,
+.preset-row .inner-line-bottom {
+  height: 1px;
+}
+
+.preset-row .inner-line-left,
+.preset-row .inner-line-right {
+  width: 1px;
 }
 
 button#saveConfigBtn {
