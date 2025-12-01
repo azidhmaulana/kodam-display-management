@@ -50,10 +50,14 @@ async function ensureStore() {
 let mainWindow;
 
 function createWindow() {
+  const iconPathPng = path.join(__dirname, "logo.png");
+  const iconPath = fs.existsSync(iconPathPng) ? iconPathPng : undefined;
+
   mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
     backgroundColor: "#000000",
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -73,6 +77,11 @@ function createWindow() {
 
 app.whenReady().then(async () => {
   await ensureStore();
+
+  const iconPathPng = path.join(__dirname, "logo.png");
+  if (process.platform === "darwin" && fs.existsSync(iconPathPng)) {
+    app.dock.setIcon(iconPathPng);
+  }
 
   // Auto-allow camera/microphone/WebRTC and media keys for embedded pages
   session.defaultSession.setPermissionRequestHandler(

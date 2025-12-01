@@ -1,6 +1,6 @@
 {
   "name": "display-manager",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Simple multi-PC display manager",
   "main": "main.js",
   "scripts": {
@@ -32,6 +32,12 @@
         "nsis"
       ],
       "icon": "build/icon.ico"
+    },
+    "mac": {
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "icon": "build/icon.png"
     },
     "directories": {
       "buildResources": "build",
